@@ -1,0 +1,99 @@
+//promise.js
+//promise 객체: pending/ fullfilled/ rejected/
+// fetch("./MOCK_DATA.JSON")
+//   .then((resp) => resp.json())
+//   .then((result) => {
+//     console.log("result ->", result);
+//     console.log("end of prog.");
+//   });
+
+//setTimeout();
+//1번째 => 2초 걸리는 작업.
+//2번째 => 3초 걸리는 작업.
+//3번째 => 1초 걸리는 작업. => 동기 방식일 경우 6초 작업.
+
+//비동기방식 처리가 시간상의 이점이 있음, 순서가 뒤죽박죽이라 순서가 중요할 땐 불편.
+//promise => 비동기처리를 동기방식의 코드.
+//예제.
+const promise = new Promise(function (resolve, reject) {
+  console.log("promise call.");
+  resolve("OK");
+});
+
+promise //
+  .then((param) => {
+    console.log(param);
+    return 1; //promise 타입으로 처리.
+  })
+  .then((param) => {
+    console.log(param);
+  })
+  .catch((param) => {
+    console.error(param);
+  });
+
+//비동기방식코드 -> 동기방식코드
+let data1 = 10;
+
+const p1 = new Promise(function (resolve) {
+  setTimeout(() => {
+    console.log("1번째");
+    data1 += 5;
+    console.log(`data=> ${data1}`);
+    resolve(data1); //then 메소드 호출.
+  }, 2000);
+});
+
+p1.then((data1) => {
+  return new Promise(function (resolve) {
+    setTimeout(() => {
+      console.log("2번째");
+      data1 *= 2;
+      console.log(`data=> ${data1}`);
+      resolve(data1); //then 메소드 호출.
+    }, 3000);
+  });
+})
+  .then((data1) => {
+    setTimeout(() => {
+      console.log("3번째");
+      data1 -= 7;
+      console.log(`data=> ${data1}`);
+    }, 1000);
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
+let answer = 10;
+//1번째작업 => 5를 더하고 : 15
+//2번째작업 => 2를 곱하고 : 30
+//3번째작업 => 7을 빼기 : 23 최종.
+setTimeout(() => {
+  console.log("1번째");
+  answer += 5;
+  console.log(`answer=> ${answer}`);
+
+  setTimeout(() => {
+    console.log("2번째");
+    answer *= 2;
+    console.log(`answer=> ${answer}`);
+
+    setTimeout(() => {
+      console.log("3번째");
+      answer -= 7;
+      console.log(`answer=> ${answer}`);
+    }, 1100);
+  }, 800);
+}, 1000);
+
+//동기방식 처리 : 시간이 오래 소요됨, 코드가 복잡함.
+// setTimeout(() => {
+//   console.log("1번째");
+//   setTimeout(() => {
+//     console.log("2번째");
+//     setTimeout(() => {
+//       console.log("3번째");
+//     }, 1000);
+//   }, 3000);
+// }, 2000);
