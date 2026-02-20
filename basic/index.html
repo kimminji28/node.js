@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button>Post요청</button>
+    <!-- http://localhost:3000/posts + get방식 => Read.-->
+    <!-- http://localhost:3000/posts + post방식 => Create.-->
+    <!-- http://localhost:3000/posts/1 + put방식 => Update. -->
+    <script>
+      document.querySelector("button").addEventListener("click", (e) => {
+        fetch("http://localhost:3000/posts/1", {
+          method: "put", //get: 전송데이터가 header에 저장됨 / post: body에 저장됨.
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title: "등록연습1111", author: "user11" }),
+        })
+          .then((resp) => resp.json())
+          .then((result) => console.log(result));
+      });
+    </script>
+  </body>
+</html>

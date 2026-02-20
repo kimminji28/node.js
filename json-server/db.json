@@ -1,0 +1,36 @@
+{
+  "posts": [
+    {
+      "title": "등록연습1111",
+      "author": "user11",
+      "id": "1"
+    },
+    {
+      "id": "9e89",
+      "title": "등록연습",
+      "author": "user99"
+    },
+    {
+      "id": "e3cf",
+      "tilte": "댓글추가",
+      "author": "plus01"
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "1번글 댓글1",
+      "postId": 1
+    },
+    {
+      "id": 2,
+      "body": "1번글 댓글1",
+      "postId": 2
+    },
+    {
+      "id": 3,
+      "body": "1번글 댓글1",
+      "postId": 3
+    }
+  ]
+}
