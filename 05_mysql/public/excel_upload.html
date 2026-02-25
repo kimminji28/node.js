@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Excel File Upload</title>
+    <style>
+      /* CSS: 스타일 정의 */
+      .upload-form {
+        display: flex;
+        justify-content: center;
+        margin-top: 100px;
+      }
+
+      .file-upload-container {
+        width: 350px;
+        padding: 30px;
+        border: 1px solid #ddd;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .hidden-input {
+        display: none;
+      }
+
+      /* 파일 선택 버튼 (하늘색) */
+      .upload-label {
+        display: inline-block;
+        background-color: #f0f7ff;
+        color: #007bff;
+        border: 1px solid #007bff;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-bottom: 10px;
+      }
+
+      .upload-label:hover {
+        background-color: #e2efff;
+      }
+
+      .file-info {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 20px;
+      }
+
+      .divider {
+        border: 0;
+        border-top: 1px solid #eee;
+        margin: 20px 0;
+      }
+
+      /* 제출 버튼 (파란색) */
+      .submit-button {
+        width: 100%;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+
+      .submit-button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="upload-card">
+      <form
+        action="/upload"
+        method="post"
+        enctype="multipart/form-data"
+        class="upload-form"
+      >
+        <div class="file-upload-container">
+          <h3>파일 업로드</h3>
+
+          <input
+            type="file"
+            id="file-selector"
+            name="myfile"
+            class="hidden-input"
+          />
+          <label for="file-selector" class="upload-label">
+            내 컴퓨터에서 찾기
+          </label>
+
+          <div class="file-info">선택된 파일이 없습니다.</div>
+
+          <hr class="divider" />
+
+          <button type="submit" class="submit-button">서버로 전송하기</button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document //
+        .querySelector(".upload-form")
+        .addEventListener("submit", (e) => {
+          console.log(e);
+          e.preventDefault();
+          //필요항목
+          const file_selector = document.querySelector("#file-selector");
+
+          const excelData = new FormData(); //?????
+          excelData.append("myfile", file_selector.files[0]);
+
+          fetch("./api/excel_upload", {
+            method: "post",
+            body: excelData,
+          })
+            .then((resp) => resp.json())
+            .then((data) => {
+              console.log(data);
+
+              if (data.retCode == "OK") {
+                alert("첨부 성공");
+                location.reload();
+              } else {
+                alert("첨부 실패");
+              }
+            })
+            .catch((err) => console.log(err));
+        });
+    </script>
+  </body>
+</html>

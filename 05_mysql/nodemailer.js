@@ -1,13 +1,26 @@
 //nodemailer.js  터미널-npm install nodemailer 설치
 const nodemailer = require("nodemailer");
+//.env 환경변수.
+require("dotenv").config();
 
+// const daumConfig = {
+//   host: "smtp.daum.net",
+//   port: 465,
+//   secure: true,
+//   auth: {
+//     user: "alswl25852@daum.net",
+//     pass: "jrzpjogyqlacdldr",
+//   },
+// };
+
+//개인정보를 지키자 = env 활용
 const daumConfig = {
-  host: "smtp.daum.net",
-  port: 465,
+  host: process.env.DAUM_HOST,
+  port: process.env.DAUM_PORT,
   secure: true,
   auth: {
-    user: "alswl25852@daum.net",
-    pass: "jrzpjogyqlacdldr",
+    user: process.env.DAUM_USER,
+    pass: process.env.DAUM_PASS,
   },
 };
 
@@ -26,6 +39,20 @@ const send = async (data) => {
     });
   });
 };
+
+// send({
+//   from: "alswl25852@daum.net",
+//   to: "koala579@daum.net",
+//   subject: "파일첨부테스트",
+//   html: "<p>파일첨부연습</p>",
+//   attachments: [
+//     {
+//       filename: "콧물돌리기.jpg", //파일명
+//       path: __dirname + "/uploads/" + "콧물돌리기.jpg", //실제파일
+//     },
+//   ],
+// });
+// console.log("main send...");
 
 // console.log("메일발송 호출.");
 module.exports = { send };

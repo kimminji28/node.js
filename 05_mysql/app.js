@@ -1,10 +1,14 @@
 //app.js
 const express = require("express");
+const path = require("path");
 //.env 환경변수.
 require("dotenv").config();
+
 const mysql = require("./index");
 const encrypto = require("./crypto");
 const nodemailer = require("./nodemailer");
+const { upload } = require("./multer");
+const { excel_run } = require("./excel");
 
 //express 인스턴스.
 const app = express();
@@ -12,7 +16,7 @@ const app = express();
 //body-parser
 app.use(express.json());
 //정적페이지
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 //라우팅
 //1. 전체 목록 조회. 리소스+요청방식 => CRUD(REST 방식)
@@ -84,9 +88,25 @@ app.post("/api/login", async (req, res) => {
   }
 });
 
-//6. 메일발송
-app.post("/api/mail", async (req, res) => {
+// //6. 메일발송
+// app.post("/api/mail", upload.single("myfile"), async (req, res) => {
+//   const { from, to, subject, text } = req.body;
+
+//   //multi 라인으로 변경.
+//   const html = text
+//     .split("\n")
+//     .map((elem) => `<p>${elem}</p>`)
+//     .join("");
+
+//   const result = await nodemailer.send({ from, to, subject, html });
+
+//   res.json(result);
+// });
+
+//7. 파일첨부
+app.post("/api/mail", upload.single("myfile"), async (req, res) => {
   const { from, to, subject, text } = req.body;
+  console.log(req);
 
   //multi 라인으로 변경.
   const html = text
@@ -94,9 +114,48 @@ app.post("/api/mail", async (req, res) => {
     .map((elem) => `<p>${elem}</p>`)
     .join("");
 
-  const result = await nodemailer.send({ from, to, subject, html });
+  //메일정보. 파일첨부 여부에 따라 처리.
+  let attachments;
+  if (req.file == undefined) {
+    attachments = null;
+  } else {
+    attachments = [
+      {
+        filename: req.file.filename,
+        // path: path.join,(__dirname, req.file.destination, req.file.filename),
+        path: req.file.path,
+      },
+    ];
+  }
 
+  const postData = {
+    from,
+    to,
+    subject,
+    html,
+    attachments,
+  };
+
+  const result = await nodemailer.send(postData);
+  if (result.messageId) {
+    res.json({ retCode: "OK" });
+  } else {
+    res.json({ retCode: "NG" });
+  }
+  // res.json(result);
+  // res.send("<p>메일발송성공</p>");
+});
+
+//8. 엑셀파일 첨부 후 db insert.
+app.post("/api/excel_upload", upload.single("myfile"), async (req, res) => {
+  const result = excel_run(req.file.path);
   res.json(result);
+  res.json({ retCode: "OK" });
+
+  // if (result) {
+  // } else {
+  //   res.json({ retCode: "NG" });
+  // }
 });
 
 app.listen(3000, () => {
