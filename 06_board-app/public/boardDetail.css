@@ -1,0 +1,92 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+body {
+  background-color: #f5f6fa;
+  display: flex;
+  justify-content: center;
+  padding: 50px 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+}
+
+.page-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.board-card {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.board-header {
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.board-header h3 {
+  margin-bottom: 10px;
+  font-size: 22px;
+  color: #222;
+}
+
+.meta {
+  font-size: 14px;
+  color: #777;
+  display: flex;
+  justify-content: space-between;
+}
+
+.board-content {
+  min-height: 200px;
+  line-height: 1.6;
+  font-size: 16px;
+  color: #444;
+  margin-bottom: 30px;
+  white-space: pre-line;
+}
+
+.button-group {
+  text-align: right;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 14px;
+  transition: 0.2s ease;
+}
+
+.list-btn {
+  background-color: #6c757d;
+  color: white;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}

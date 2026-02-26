@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시글 목록</title>
+    <link rel="stylesheet" href="boardList.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>📋 게시글 목록</h2>
+
+      <table class="board-table">
+        <thead>
+          <tr>
+            <th>글번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일시</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <script>
+      //페이지 로딩되면서 바로 데이터를 가지고와서 목록 그리기.
+      fetch("./api/board")
+        .then((resp) => resp.json())
+        .then((data) => {
+          //tr의 상위요소에 insertAdjacentHTML() 함수를 활용.
+          const parent = document.querySelector("tbody");
+          for (let board of data) {
+            console.log(board);
+            const { board_id, title, name, created_at } = board;
+            const html = `<tr>
+              <td>${board_id}</td>
+              <td class="title">
+                <a href="boardDetail.html" data-page="${board_id}">${title}</a>
+              </td>
+              <td>${name}</td>
+              <td>${created_at}</td>
+            </tr>`;
+            parent.insertAdjacentHTML("beforeend", html);
+          } //end of for
+          //a 태그 요소를 가져와서 클릭이벤트 걸기.
+          document.querySelectorAll("tbody a").forEach((elem) => {
+            elem.addEventListener("click", (e) => {
+              e.preventDefault(); //클릭 기본기능 차단.
+              //클릭한 글번호를 localStorage에 저장 (상세화면에서 storage를 읽어야 함)
+              localStorage.setItem("page", e.target.dataset.page);
+              location.href = "boardDetail.html";
+            });
+          });
+        })
+        .catch((err) => console.log(err));
+    </script>
+  </body>
+</html>

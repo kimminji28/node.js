@@ -150,13 +150,15 @@ app.post("/api/mail", upload.single("myfile"), async (req, res) => {
 app.post("/api/excel_upload", upload.single("myfile"), async (req, res) => {
   const result = excel_run(req.file.path);
   res.json(result);
-  res.json({ retCode: "OK" });
 
-  // if (result) {
-  // } else {
-  //   res.json({ retCode: "NG" });
-  // }
+  if (result) {
+    res.json({ retCode: "OK" });
+  } else {
+    res.json({ retCode: "NG" });
+  }
 });
+
+//9. 엑셀파일 클라이언트로 다운로드
 
 app.listen(3000, () => {
   console.log("server is running...");

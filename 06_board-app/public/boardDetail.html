@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시글 상세보기</title>
+    <link rel="stylesheet" href="boardDetail.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2 class="page-title">게시글 상세보기</h2>
+
+      <div class="board-card">
+        <!-- 게시글 번호 -->
+        <div class="board-no">NO.<span id="board_id"></span></div>
+
+        <!-- 제목 + 메타정보 -->
+        <div class="board-header">
+          <h3 id="title"></h3>
+          <div class="meta">
+            <span>작성자 : <span id="writer"></span></span>
+            <span>작성일 : <span id="date"></span></span>
+          </div>
+        </div>
+
+        <!-- 게시글 내용 -->
+        <div class="board-content" id="content"></div>
+
+        <!-- 버튼 영역 -->
+        <div class="button-group">
+          <button class="btn back-btn">이전</button>
+          <button class="btn list-btn">목록</button>
+          <button class="btn edit-btn">수정</button>
+          <button class="btn delete-btn">삭제</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      const page = localStorage.getItem("page");
+      fetch("./api/board/" + page)
+        .then((resp) => resp.json())
+        .then((data) => {
+          console.log(data[0].board_id);
+
+          //글번호
+          const { board_id, title, name, created_at, content } = data[0];
+          const bno = document.querySelector("#board_id");
+          const title1 = document.querySelector("#title");
+          const writer = document.querySelector("#writer");
+          const date = document.querySelector("#date");
+          const content1 = document.querySelector("#content");
+
+          bno.innerHTML = board_id;
+          title1.innerHTML = title;
+          writer.innerHTML = name;
+          date.innerHTML = created_at;
+          content1.innerHTML = content
+            .split("\n")
+            .map((elem) => `<p>${elem}</p>`)
+            .join("");
+        })
+        .catch((err) => console.log(err));
+    </script>
+  </body>
+</html>

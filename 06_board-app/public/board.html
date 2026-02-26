@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>게시글 등록</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h3>게시글 등록</h3>
+
+      <form action="./api/board" method="post" id="boardform">
+        <div class="form-group">
+          <label for="title">제목</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="제목을 입력하세요"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="writer">작성자</label>
+          <input
+            type="text"
+            id="writer"
+            name="writer_id"
+            placeholder="작성자 이름을 입력하세요"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="content">내용</label>
+          <textarea
+            id="content"
+            name="content"
+            rows="6"
+            placeholder="내용을 입력하세요"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit">등록하기</button>
+      </form>
+    </div>
+    <script>
+      //fetch 활용해서 등록.
+      document //
+        .querySelector("#boardform")
+        .addEventListener("submit", (e) => {
+          e.preventDefault();
+          //필요항목
+          const title = document.querySelector("#title").value;
+          const writer_id = document.querySelector("#writer").value;
+          const content = document.querySelector("#content").value;
+          if (!title || !writer_id || !content) {
+            alert("필수 항목 입력");
+            return;
+          }
+
+          fetch("./api/board/insert", {
+            method: "post",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ title, content, writer_id }),
+          })
+            .then((resp) => resp.json())
+            .then((data) => {
+              console.log(data);
+
+              if (data.retCode == "OK") {
+                alert(`[등록 성공] 글목록으로 이동`);
+                location.href = "boardList.html";
+              } else {
+                alert(`에러 ${(data, retMsg)}`);
+              }
+            })
+            .catch((err) => console.log(err));
+        });
+    </script>
+  </body>
+</html>
