@@ -8,11 +8,17 @@
   </head>
   <body>
     <div class="container">
-      <h2 class="page-title">게시글 상세보기</h2>
+      <!-- 로그인정보 vs 작성자정보 비교 -->
+      <div id="member_id" style="display: none"></div>
+      <div id="writer_id" style="display: none"></div>
 
+      <h2 class="page-title">게시글 상세보기</h2>
       <div class="board-card">
         <!-- 게시글 번호 -->
-        <div class="board-no">NO.<span id="board_id"></span></div>
+        <div class="board-no">
+          <p>NO.<span id="board_id"></span></p>
+        </div>
+        <span class="login"></span>
 
         <!-- 제목 + 메타정보 -->
         <div class="board-header">
@@ -29,7 +35,7 @@
         <!-- 버튼 영역 -->
         <div class="button-group">
           <button class="btn back-btn">이전</button>
-          <button class="btn list-btn">목록</button>
+          <button class="btn list-btn">등록</button>
           <button class="btn edit-btn">수정</button>
           <button class="btn delete-btn">삭제</button>
         </div>
@@ -39,15 +45,33 @@
       const page = localStorage.getItem("page");
       fetch("./api/board/" + page)
         .then((resp) => resp.json())
-        .then((data) => {
+        .then(({ user, data }) => {
+          console.log(data); // {user: {...}, data: [{...}]}
           console.log(data[0].board_id);
+          // const [board] = data;
+          //member_id, writer_id 값 지정
+          document.querySelector("#member_id").innerHTML = user.member_id;
+          document.querySelector("#writer_id").innerHTML = data[0].writer_id;
 
-          //글번호
+          //비활성화
+          // if(user.member_id != data.writer_id) {
+          //   document.querySelector('.delete-btn').disabled = true;
+          // }
+
+          //로그인 아이디
+          document.querySelector("span.login").innerHTML =
+            `ID: ${user.login_id}(${user.name})`;
+          //정보수집
           const { board_id, title, name, created_at, content } = data[0];
+          //글넘버
           const bno = document.querySelector("#board_id");
+          //글제목
           const title1 = document.querySelector("#title");
+          //작성자
           const writer = document.querySelector("#writer");
+          //작성일
           const date = document.querySelector("#date");
+          //글내용
           const content1 = document.querySelector("#content");
 
           bno.innerHTML = board_id;
@@ -60,6 +84,44 @@
             .join("");
         })
         .catch((err) => console.log(err));
+
+      //수정버튼 이벤트
+      document.querySelector(".edit-btn").addEventListener("click", (e) => {
+        //권한 체크.
+        const mid = document.querySelector("#member_id").innerHTML;
+        const wid = document.querySelector("#writer_id").innerHTML;
+        if (mid == wid) {
+          alert("수정페이지로 이동합니다.");
+        } else {
+          alert("권한이 없습니다.");
+          return;
+        }
+      });
+
+      //삭제버튼 이벤트
+      document.querySelector(".delete-btn").addEventListener("click", (e) => {
+        //삭제.
+        const deleteId = localStorage.getItem("page");
+
+        fetch("./api/board/" + deleteId, {
+          method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"), //이 줄 해석 필요
+          },
+        })
+          .then((resp) => resp.json())
+          .then((data) => {
+            console.log(data);
+
+            if (data.retCode == "OK") {
+              alert(`[삭제 성공]`);
+              location.href = "boardList.html";
+            } else {
+              alert(`에러 ${data.retMsg}`);
+            }
+          })
+          .catch((err) => console.log(err));
+      });
     </script>
   </body>
 </html>

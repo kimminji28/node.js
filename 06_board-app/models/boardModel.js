@@ -9,8 +9,10 @@ async function getList() {
     b.title,
     b.content,
     DATE_FORMAT(b.created_at, '%Y-%m-%d') AS created_at,
+    b.writer_id,
     m.login_id,
-    m.name
+    m.name,
+    m.member_id
   FROM tbl_board b
   JOIN tbl_member m ON b.writer_id = m.member_id
   ORDER BY b.board_id DESC
@@ -30,8 +32,10 @@ async function getById(id) {
     b.title,
     b.content,
     DATE_FORMAT(b.created_at, '%Y-%m-%d') AS created_at,
+    b.writer_id,
     m.login_id,
-    m.name
+    m.name,
+    m.member_id
   FROM tbl_board b
   JOIN tbl_member m ON b.writer_id = m.member_id
   WHERE b.board_id = ?;
@@ -48,5 +52,11 @@ async function insert(title, content, writer_id) {
   return pool.query(sql, [title, content, writer_id]);
 }
 
+//글삭제(remove)
+async function remove(id) {
+  const sql = `delete from tbl_board where board_id = ?`;
+  return pool.query(sql, [id]);
+}
+
 //모듈 exports
-module.exports = { getList, getById, insert };
+module.exports = { getList, getById, insert, remove };

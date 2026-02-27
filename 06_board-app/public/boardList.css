@@ -29,6 +29,11 @@ h2 {
   color: white;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .board-table th,
 .board-table td {
   padding: 12px;

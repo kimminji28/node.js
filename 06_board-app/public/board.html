@@ -61,17 +61,20 @@
             alert("필수 항목 입력");
             return;
           }
-
+          //ajax 호출
           fetch("./api/board/insert", {
             method: "post",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, content, writer_id }),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("token"), //이 줄 해석 필요
+            },
+            body: JSON.stringify({ title: title, content: content }), //writer_id token때문에 제외
           })
             .then((resp) => resp.json())
             .then((data) => {
               console.log(data);
 
-              if (data.retCode == "OK") {
+              if (data.retCode === "OK") {
                 alert(`[등록 성공] 글목록으로 이동`);
                 location.href = "boardList.html";
               } else {

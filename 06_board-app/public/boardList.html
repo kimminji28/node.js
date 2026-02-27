@@ -27,6 +27,7 @@
       fetch("./api/board")
         .then((resp) => resp.json())
         .then((data) => {
+          console.log("boardList:", data);
           //tr의 상위요소에 insertAdjacentHTML() 함수를 활용.
           const parent = document.querySelector("tbody");
           for (let board of data) {
